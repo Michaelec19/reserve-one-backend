@@ -51,6 +51,36 @@ public class UserService {
         response.setEmailUser(user.getEmailUser());
         response.setNameRol(user.getRol().getNameRol());
         response.setCreationDate(user.getCreationDate());
+        response.setUpdateDate(user.getUpdateDate());
         return response;
+    }
+
+    public UserResponseDto updateUser(Long id, UserRequestDto dto) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + id));
+
+        user.setNameUser(dto.getNameUser());
+        user.setLastNameUser(dto.getLastNameUser());
+        user.setEmailUser(dto.getEmailUser());
+
+        if (dto.getPasswordUser() != null && !dto.getPasswordUser().isEmpty()) {
+            user.setPasswordUser(dto.getPasswordUser());
+        }
+
+        User updatedUser = userRepository.save(user);
+        return mapToResponse(updatedUser);
+    }
+
+    public void deleteUser(Long id) {
+        if (!userRepository.existsById(id)) {
+            throw new RuntimeException("Usuario no encontrado con ID: " + id);
+        }
+        userRepository.deleteById(id);
+    }
+
+    public UserResponseDto findById(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + id));
+        return mapToResponse(user);
     }
 }
