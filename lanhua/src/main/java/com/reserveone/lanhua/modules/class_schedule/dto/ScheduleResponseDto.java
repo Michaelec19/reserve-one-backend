@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 public class ScheduleResponseDto {
     private Long idSchedule;
-    private Long idCatalog;
+    private Integer idCatalog;
     private String modality;
     private String level;
     private Integer quotas;

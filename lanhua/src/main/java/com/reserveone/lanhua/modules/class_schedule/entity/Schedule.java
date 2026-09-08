@@ -2,6 +2,7 @@ package com.reserveone.lanhua.modules.schedule.entity;
 
 import java.time.LocalDateTime;
 
+import com.reserveone.lanhua.modules.catalog.entity.Catalog;
 import com.reserveone.lanhua.modules.user.entity.User;
 
 import jakarta.persistence.Column;
@@ -26,10 +27,9 @@ public class Schedule {
     @Column(name = "id_schedule")
     private Long idSchedule;
 
-    // Todavia no existe el modulo catalog, por eso queda como Long plano.
-    // Cuando exista la entidad Catalog, esto se cambia a @ManyToOne + @JoinColumn.
-    @Column(name = "id_catalog", nullable = false)
-    private Long idCatalog;
+    @ManyToOne
+    @JoinColumn(name = "id_catalog", nullable = false)
+    private Catalog catalog;
 
     @Column(name = "modality", nullable = false, length = 20)
     private String modality;

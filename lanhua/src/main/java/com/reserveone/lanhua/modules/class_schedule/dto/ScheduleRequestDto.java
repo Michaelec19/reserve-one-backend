@@ -11,7 +11,7 @@ import lombok.Data;
 public class ScheduleRequestDto {
 
     @NotNull
-    private Long idCatalog;
+    private Integer idCatalog;
 
     @NotBlank
     @Size(max = 20)

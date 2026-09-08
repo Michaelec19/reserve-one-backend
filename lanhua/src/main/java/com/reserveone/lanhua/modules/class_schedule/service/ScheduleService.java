@@ -5,6 +5,8 @@ import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
+import com.reserveone.lanhua.modules.catalog.entity.Catalog;
+import com.reserveone.lanhua.modules.catalog.repository.CatalogRepository;
 import com.reserveone.lanhua.modules.schedule.dto.ScheduleRequestDto;
 import com.reserveone.lanhua.modules.schedule.dto.ScheduleResponseDto;
 import com.reserveone.lanhua.modules.schedule.entity.Schedule;
@@ -17,10 +19,14 @@ public class ScheduleService {
 
     private final ScheduleRepository scheduleRepository;
     private final UserRepository userRepository;
+    private final CatalogRepository catalogRepository;
 
-    public ScheduleService(ScheduleRepository scheduleRepository, UserRepository userRepository) {
+    public ScheduleService(ScheduleRepository scheduleRepository,
+                           UserRepository userRepository,
+                           CatalogRepository catalogRepository) {
         this.scheduleRepository = scheduleRepository;
         this.userRepository = userRepository;
+        this.catalogRepository = catalogRepository;
     }
 
     public List<ScheduleResponseDto> listSchedules() {
@@ -39,8 +45,11 @@ public class ScheduleService {
         User user = userRepository.findById(dto.getIdUser())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
+        Catalog catalog = catalogRepository.findById(dto.getIdCatalog())
+                .orElseThrow(() -> new RuntimeException("Catálogo no encontrado"));
+
         Schedule schedule = new Schedule();
-        schedule.setIdCatalog(dto.getIdCatalog());
+        schedule.setCatalog(catalog);
         schedule.setModality(dto.getModality());
         schedule.setLevel(dto.getLevel());
         schedule.setQuotas(dto.getQuotas());
@@ -59,7 +68,10 @@ public class ScheduleService {
         User user = userRepository.findById(dto.getIdUser())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        schedule.setIdCatalog(dto.getIdCatalog());
+        Catalog catalog = catalogRepository.findById(dto.getIdCatalog())
+                .orElseThrow(() -> new RuntimeException("Catálogo no encontrado"));
+
+        schedule.setCatalog(catalog);
         schedule.setModality(dto.getModality());
         schedule.setLevel(dto.getLevel());
         schedule.setQuotas(dto.getQuotas());
@@ -85,7 +97,7 @@ public class ScheduleService {
     private ScheduleResponseDto mapToResponse(Schedule schedule) {
         ScheduleResponseDto response = new ScheduleResponseDto();
         response.setIdSchedule(schedule.getIdSchedule());
-        response.setIdCatalog(schedule.getIdCatalog());
+        response.setIdCatalog(schedule.getCatalog().getIdCatalog());
         response.setModality(schedule.getModality());
         response.setLevel(schedule.getLevel());
         response.setQuotas(schedule.getQuotas());
