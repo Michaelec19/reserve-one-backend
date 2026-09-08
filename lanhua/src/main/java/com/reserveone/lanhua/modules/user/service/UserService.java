@@ -9,16 +9,19 @@ import com.reserveone.lanhua.modules.user.entity.Rol;
 import com.reserveone.lanhua.modules.user.entity.User;
 import com.reserveone.lanhua.modules.user.repository.RolRepository;
 import com.reserveone.lanhua.modules.user.repository.UserRepository;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Service
 public class UserService {
 
     private final UserRepository userRepository;
     private final RolRepository rolRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository, RolRepository rolRepository) {
+    public UserService(UserRepository userRepository, RolRepository rolRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.rolRepository = rolRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<UserResponseDto> listUsers() {
@@ -36,7 +39,7 @@ public class UserService {
         user.setNameUser(dto.getNameUser());
         user.setLastNameUser(dto.getLastNameUser());
         user.setEmailUser(dto.getEmailUser());
-        user.setPasswordUser(dto.getPasswordUser());
+        user.setPasswordUser(passwordEncoder.encode(dto.getPasswordUser()));
         user.setRol(rol);
 
         User savedUser = userRepository.save(user);
@@ -51,6 +54,36 @@ public class UserService {
         response.setEmailUser(user.getEmailUser());
         response.setNameRol(user.getRol().getNameRol());
         response.setCreationDate(user.getCreationDate());
+        response.setUpdateDate(user.getUpdateDate());
         return response;
+    }
+
+    public UserResponseDto updateUser(Long id, UserRequestDto dto) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + id));
+
+        user.setNameUser(dto.getNameUser());
+        user.setLastNameUser(dto.getLastNameUser());
+        user.setEmailUser(dto.getEmailUser());
+
+        if (dto.getPasswordUser() != null && !dto.getPasswordUser().isEmpty()) {
+            user.setPasswordUser(passwordEncoder.encode(dto.getPasswordUser()));
+        }
+
+        User updatedUser = userRepository.save(user);
+        return mapToResponse(updatedUser);
+    }
+
+    public void deleteUser(Long id) {
+        if (!userRepository.existsById(id)) {
+            throw new RuntimeException("Usuario no encontrado con ID: " + id);
+        }
+        userRepository.deleteById(id);
+    }
+
+    public UserResponseDto findById(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado con ID: " + id));
+        return mapToResponse(user);
     }
 }
