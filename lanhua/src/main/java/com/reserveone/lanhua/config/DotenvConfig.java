@@ -1,7 +1,7 @@
 package com.reserveone.lanhua.config;
 import io.github.cdimascio.dotenv.Dotenv;
-public class DotenvConfig {
 
+public class DotenvConfig {
     public static void load() {
         Dotenv dotenv = Dotenv.load();
         System.setProperty("DB_NAME", dotenv.get("DB_NAME"));
