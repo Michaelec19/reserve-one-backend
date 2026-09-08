@@ -1,16 +1,11 @@
 package com.reserveone.lanhua.modules.user.controller;
 
 import java.util.List;
-
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import com.reserveone.lanhua.modules.user.entity.User;
+import org.springframework.web.bind.annotation.*;
+import com.reserveone.lanhua.modules.user.dto.UserRequestDto;
+import com.reserveone.lanhua.modules.user.dto.UserResponseDto;
 import com.reserveone.lanhua.modules.user.service.UserService;
 
 @RestController
@@ -24,21 +19,13 @@ public class UserController {
     }
 
     @GetMapping
-    public ResponseEntity<List<User>> getAllUsers() {
-        List<User> users = userService.listUsers();
-        return ResponseEntity.ok(users);
-    }
-
-    @GetMapping("/email/{email}")
-    public ResponseEntity<User> getUserByEmail(@PathVariable String email) {
-        return userService.findByEmail(email)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<List<UserResponseDto>> getAllUsers() {
+        return ResponseEntity.ok(userService.listUsers());
     }
 
     @PostMapping
-    public ResponseEntity<User> createUser(@RequestBody User user) {
-        User newUser = userService.saveUser(user);
-        return ResponseEntity.ok(newUser);
+    public ResponseEntity<UserResponseDto> createUser(@RequestBody UserRequestDto userDto) {
+        UserResponseDto newUser = userService.saveUser(userDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(newUser);
     }
 }
