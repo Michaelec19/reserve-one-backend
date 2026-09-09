@@ -12,9 +12,9 @@ import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import lombok.Data;
 
-@Entity 
+@Entity
 @Table(name = "rol")
-@Data 
+@Data
 public class Rol {
 
     @Id
