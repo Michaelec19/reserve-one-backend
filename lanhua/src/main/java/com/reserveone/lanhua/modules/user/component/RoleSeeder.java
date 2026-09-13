@@ -17,14 +17,16 @@ public class RoleSeeder implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        if (rolRepository.count() == 0) {
+        if (rolRepository.findByNameRol("ADMIN").isEmpty()) {
             Rol admin = new Rol();
             admin.setNameRol("ADMIN");
+            rolRepository.save(admin);
+        }
 
+        if (rolRepository.findByNameRol("CLIENT").isEmpty()) {
             Rol client = new Rol();
             client.setNameRol("CLIENT");
-
-            rolRepository.saveAll(List.of(admin, client));
+            rolRepository.save(client);
         }
     }
 }
