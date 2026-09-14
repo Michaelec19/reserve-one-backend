@@ -10,7 +10,7 @@ import com.reserveone.lanhua.modules.reservation.entity.Reservation;
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
 
-    List<Reservation> findByUser_IdUser(Long idUser);
+    List<Reservation> findByUsers_IdUser(Long idUser);
 
     List<Reservation> findBySchedule_IdSchedule(Long idSchedule);
 }

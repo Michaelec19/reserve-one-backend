@@ -40,18 +40,23 @@ public class AuthController {
 
         if (isAuthenticated) {
             String nombreRol = "CLIENTE";
+            Long userId = null;
 
             try {
                 User usuario = userRepository.findByEmailUser(loginDto.getEmail()).get();
                 nombreRol = usuario.getRol().getNameRol();
+                userId = usuario.getIdUser();
             } catch (Exception e) {
-                System.out.println("No se pudo obtener el rol, usando CLIENTE por defecto.");
+                System.out.println("No se pudo obtener el rol o ID, usando valores por defecto.");
             }
 
             String token = jwtUtils.generateJwtToken(loginDto.getEmail(), nombreRol);
 
-            Map<String, String> response = new HashMap<>();
+            Map<String, Object> response = new HashMap<>();
             response.put("token", token);
+            response.put("id", userId);
+            response.put("email", loginDto.getEmail());
+            response.put("role", nombreRol);
 
             return ResponseEntity.ok(response);
         } else {

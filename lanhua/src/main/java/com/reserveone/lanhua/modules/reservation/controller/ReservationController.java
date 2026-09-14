@@ -1,6 +1,7 @@
 package com.reserveone.lanhua.modules.reservation.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,8 +44,19 @@ public class ReservationController {
         return ResponseEntity.status(HttpStatus.CREATED).body(created);
     }
 
-    @PatchMapping("/{id}/cancel")
+    @PutMapping("/{id}/cancel")
     public ResponseEntity<ReservationResponseDto> cancelReservation(@PathVariable Long id) {
         return ResponseEntity.ok(reservationService.cancelReservation(id));
     }
+
+    @PutMapping("/user/{idUser}/confirm")
+    public ResponseEntity<?> confirmReservations(@PathVariable Long idUser) {
+        try {
+            reservationService.confirmUserReservations(idUser);
+            return ResponseEntity.ok(Map.of("message", "Reservas confirmadas exitosamente"));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", e.getMessage()));
+        }
+    }
+
 }
