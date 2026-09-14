@@ -41,7 +41,7 @@ public class ReservationService {
     }
 
     public List<ReservationResponseDto> listByUser(Long idUser) {
-        return reservationRepository.findByUser_IdUser(idUser)
+        return reservationRepository.findByUsers_IdUser(idUser)
                 .stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
@@ -52,21 +52,23 @@ public class ReservationService {
     }
 
     public ReservationResponseDto createReservation(ReservationRequestDto dto) {
-        User user = userRepository.findById(dto.getIdUser())
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        List<User> users = userRepository.findAllById(dto.getIdUsers());
+        if (users.isEmpty()) {
+            throw new RuntimeException("No se encontraron usuarios válidos para la reserva");
+        }
 
         Schedule schedule = scheduleRepository.findById(dto.getIdSchedule())
                 .orElseThrow(() -> new RuntimeException("Horario no encontrado"));
 
-        if (schedule.getQuotas() == null || schedule.getQuotas() <= 0) {
-            throw new RuntimeException("No hay cupos disponibles para este horario");
+        if (schedule.getQuotas() == null || schedule.getQuotas() < users.size()) {
+            throw new RuntimeException("No hay suficientes cupos disponibles para este horario");
         }
 
-        schedule.setQuotas(schedule.getQuotas() - 1);
+        schedule.setQuotas(schedule.getQuotas() - users.size());
         scheduleRepository.save(schedule);
 
         Reservation reservation = new Reservation();
-        reservation.setUser(user);
+        reservation.setUsers(users);
         reservation.setSchedule(schedule);
         reservation.setReservationDate(LocalDateTime.now());
         reservation.setReservationState(STATE_PENDING);
@@ -85,7 +87,7 @@ public class ReservationService {
         reservation.setReservationState(STATE_CANCELLED);
 
         Schedule schedule = reservation.getSchedule();
-        schedule.setQuotas(schedule.getQuotas() + 1);
+        schedule.setQuotas(schedule.getQuotas() + reservation.getUsers().size());
         scheduleRepository.save(schedule);
 
         Reservation updated = reservationRepository.save(reservation);
@@ -97,16 +99,31 @@ public class ReservationService {
                 .orElseThrow(() -> new RuntimeException("Reserva no encontrada"));
     }
 
+
     private ReservationResponseDto mapToResponse(Reservation reservation) {
         ReservationResponseDto response = new ReservationResponseDto();
         response.setIdReservation(reservation.getIdReservation());
-        response.setIdUser(reservation.getUser().getIdUser());
-        response.setUserName(reservation.getUser().getNameUser() + " " + reservation.getUser().getLastNameUser());
+        response.setIdUsers(reservation.getUsers().stream().map(User::getIdUser).collect(Collectors.toList()));
+        response.setUserNames(reservation.getUsers().stream()
+                .map(u -> u.getNameUser() + " " + u.getLastNameUser())
+                .collect(Collectors.toList()));
+
         response.setIdSchedule(reservation.getSchedule().getIdSchedule());
         response.setModality(reservation.getSchedule().getModality());
         response.setReservationDate(reservation.getReservationDate());
         response.setReservationState(reservation.getReservationState());
         response.setCreatedAt(reservation.getCreatedAt());
         return response;
+    }
+
+    public void confirmUserReservations(Long idUser) {
+        List<Reservation> userReservations = reservationRepository.findByUsers_IdUser(idUser);
+
+        for (Reservation res : userReservations) {
+            if ("PENDIENTE".equalsIgnoreCase(res.getReservationState()) || "PENDING".equalsIgnoreCase(res.getReservationState())) {
+                res.setReservationState("CONFIRMED");
+                reservationRepository.save(res);
+            }
+        }
     }
 }

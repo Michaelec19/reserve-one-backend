@@ -54,6 +54,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/subscriptions/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/subscriptions/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/subscriptions/**").hasRole("ADMIN")
+                        .requestMatchers("/api/reservations/**").authenticated()
                         .anyRequest().authenticated()
                 );
 
