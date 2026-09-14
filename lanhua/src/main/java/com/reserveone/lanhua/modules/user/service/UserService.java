@@ -32,7 +32,8 @@ public class UserService {
     }
 
     public UserResponseDto saveUser(UserRequestDto dto) {
-        Rol rol = rolRepository.findById(dto.getIdRol())
+        Long roleId = (dto.getIdRol() != null) ? dto.getIdRol() : 2L;
+        Rol rol = rolRepository.findById(roleId)
                 .orElseThrow(() -> new RuntimeException("Rol no encontrado"));
 
         User user = new User();
