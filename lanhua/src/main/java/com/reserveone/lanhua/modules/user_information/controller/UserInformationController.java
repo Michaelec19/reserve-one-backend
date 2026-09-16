@@ -19,8 +19,7 @@ public class UserInformationController {
         if (info != null) {
             return ResponseEntity.ok(info);
         }
-        // Devuelve 204 No Content si el usuario existe pero no tiene perfil médico aún
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.notFound().build();
     }
 
     @PostMapping

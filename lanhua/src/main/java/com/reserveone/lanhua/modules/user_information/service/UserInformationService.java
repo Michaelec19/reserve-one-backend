@@ -3,11 +3,9 @@ package com.reserveone.lanhua.modules.user_information.service;
 import com.reserveone.lanhua.modules.user_information.dto.UserInformationDTO;
 import com.reserveone.lanhua.modules.user_information.entity.UserInformation;
 import com.reserveone.lanhua.modules.user_information.repository.UserInformationRepository;
-import com.reserveone.lanhua.modules.user.repository.UserRepository;
-import com.reserveone.lanhua.modules.user.entity.User;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.Optional;
 
 @Service
@@ -16,12 +14,8 @@ public class UserInformationService {
     @Autowired
     private UserInformationRepository repository;
 
-    @Autowired
-    private UserRepository userRepository;
-
     public UserInformationDTO getByUserId(Integer idUser) {
-        // Actualizamos el nombre del método y convertimos a Long
-        Optional<UserInformation> entityOpt = repository.findByUser_IdUser(Long.valueOf(idUser));
+        Optional<UserInformation> entityOpt = repository.findByIdUser(idUser);
         if (entityOpt.isPresent()) {
             return mapToDTO(entityOpt.get());
         }
@@ -29,15 +23,10 @@ public class UserInformationService {
     }
 
     public UserInformationDTO saveOrUpdate(UserInformationDTO dto) {
-        User user = userRepository.findById(Long.valueOf(dto.getIdUser()))
-                .orElseThrow(() -> new RuntimeException("El usuario con ID " + dto.getIdUser() + " no existe."));
-
-        // Actualizamos el nombre del método y convertimos a Long
-        UserInformation entity = repository.findByUser_IdUser(Long.valueOf(dto.getIdUser()))
+        UserInformation entity = repository.findByIdUser(dto.getIdUser())
                 .orElse(new UserInformation());
 
-        entity.setUser(user);
-
+        entity.setIdUser(dto.getIdUser());
         entity.setNumberDni(dto.getNumberDni());
         entity.setAddress(dto.getAddress());
         entity.setUserPhone(dto.getUserPhone());
@@ -57,14 +46,8 @@ public class UserInformationService {
 
     private UserInformationDTO mapToDTO(UserInformation entity) {
         UserInformationDTO dto = new UserInformationDTO();
-
         dto.setIdUserInformation(entity.getIdUserInformation());
-
-        if (entity.getUser() != null) {
-            // SOLUCIÓN AL ERROR 2: Usamos el getter de Lombok 'getIdUser()' y convertimos a Integer
-            dto.setIdUser(entity.getUser().getIdUser().intValue());
-        }
-
+        dto.setIdUser(entity.getIdUser());
         dto.setNumberDni(entity.getNumberDni());
         dto.setAddress(entity.getAddress());
         dto.setUserPhone(entity.getUserPhone());
@@ -77,7 +60,6 @@ public class UserInformationService {
         dto.setDocumentUrl(entity.getDocumentUrl());
         dto.setEpsUrl(entity.getEpsUrl());
         dto.setDateEps(entity.getDateEps());
-
         return dto;
     }
 }

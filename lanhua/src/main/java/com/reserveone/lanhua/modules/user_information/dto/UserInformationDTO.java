@@ -1,10 +1,10 @@
 package com.reserveone.lanhua.modules.user_information.dto;
 
-import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class UserInformationDTO {
     private Integer idUserInformation;
-    private Integer idUser; // Se mantiene como Integer para el JSON del frontend
+    private Integer idUser;
     private String numberDni;
     private String address;
     private String userPhone;
@@ -16,7 +16,7 @@ public class UserInformationDTO {
     private String medicConditions;
     private String documentUrl;
     private String epsUrl;
-    private LocalDate dateEps; // Corregido a LocalDate
+    private LocalTime dateEps;
 
     // Getters y Setters
     public Integer getIdUserInformation() { return idUserInformation; }
@@ -58,6 +58,6 @@ public class UserInformationDTO {
     public String getEpsUrl() { return epsUrl; }
     public void setEpsUrl(String epsUrl) { this.epsUrl = epsUrl; }
 
-    public LocalDate getDateEps() { return dateEps; }
-    public void setDateEps(LocalDate dateEps) { this.dateEps = dateEps; }
+    public LocalTime getDateEps() { return dateEps; }
+    public void setDateEps(LocalTime dateEps) { this.dateEps = dateEps; }
 }
