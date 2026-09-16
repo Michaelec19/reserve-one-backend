@@ -1,18 +1,17 @@
 package com.reserveone.lanhua.modules.reservation.dto;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
-import lombok.Data;
+import com.reserveone.lanhua.modules.catalog.dto.CatalogSummaryDTO;
+import com.reserveone.lanhua.modules.class_schedule.dto.ScheduleSummaryDTO;
 
-@Data
-public class ReservationResponseDto {
-    private Long idReservation;
-    private List<Long> idUsers;
-    private List<String> userNames;
-    private Long idSchedule;
-    private String modality;
-    private LocalDateTime reservationDate;
-    private String reservationState;
-    private LocalDateTime createdAt;
-}
+public record ReservationResponseDto(
+        Long idReservation,
+        Long userId,
+        ScheduleSummaryDTO schedule,
+        CatalogSummaryDTO catalog,
+        String modality,
+        String reservationState,
+        LocalDateTime reservationDate,
+        LocalDateTime createdAt
+) {}
