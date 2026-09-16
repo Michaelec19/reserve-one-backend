@@ -1,7 +1,8 @@
 package com.reserveone.lanhua.modules.user_information.entity;
 
+import com.reserveone.lanhua.modules.user.entity.User; // Asegúrate de que esta ruta sea correcta
 import jakarta.persistence.*;
-import java.time.LocalTime;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -13,8 +14,10 @@ public class UserInformation {
     @Column(name = "id_user_information")
     private Integer idUserInformation;
 
-    @Column(name = "id_user")
-    private Integer idUser;
+    // Relación relacional real
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_user", referencedColumnName = "id_user")
+    private User user;
 
     @Column(name = "number_dni", length = 20)
     private String numberDni;
@@ -53,7 +56,7 @@ public class UserInformation {
     private String epsUrl;
 
     @Column(name = "date_eps")
-    private LocalTime dateEps;
+    private LocalDate dateEps;
 
     @Column(name = "createdAt")
     private LocalDateTime createdAt;
@@ -78,8 +81,8 @@ public class UserInformation {
     public Integer getIdUserInformation() { return idUserInformation; }
     public void setIdUserInformation(Integer idUserInformation) { this.idUserInformation = idUserInformation; }
 
-    public Integer getIdUser() { return idUser; }
-    public void setIdUser(Integer idUser) { this.idUser = idUser; }
+    public User getUser() { return user; }
+    public void setUser(User user) { this.user = user; }
 
     public String getNumberDni() { return numberDni; }
     public void setNumberDni(String numberDni) { this.numberDni = numberDni; }
@@ -114,8 +117,8 @@ public class UserInformation {
     public String getEpsUrl() { return epsUrl; }
     public void setEpsUrl(String epsUrl) { this.epsUrl = epsUrl; }
 
-    public LocalTime getDateEps() { return dateEps; }
-    public void setDateEps(LocalTime dateEps) { this.dateEps = dateEps; }
+    public LocalDate getDateEps() { return dateEps; }
+    public void setDateEps(LocalDate dateEps) { this.dateEps = dateEps; }
 
     public LocalDateTime getCreatedAt() { return createdAt; }
     public LocalDateTime getUpdatedAt() { return updatedAt; }
