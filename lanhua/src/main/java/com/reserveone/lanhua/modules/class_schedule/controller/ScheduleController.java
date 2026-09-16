@@ -1,4 +1,4 @@
-package com.reserveone.lanhua.modules.schedule.controller;
+package com.reserveone.lanhua.modules.class_schedule.controller;
 
 import java.util.List;
 
@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.reserveone.lanhua.modules.schedule.dto.ScheduleRequestDto;
 import com.reserveone.lanhua.modules.schedule.dto.ScheduleResponseDto;
-import com.reserveone.lanhua.modules.schedule.service.ScheduleService;
+import com.reserveone.lanhua.modules.class_schedule.service.ScheduleService;
 
 import jakarta.validation.Valid;
 
