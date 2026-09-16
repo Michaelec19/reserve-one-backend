@@ -2,7 +2,6 @@ package com.reserveone.lanhua.modules.catalog.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
-import java.util.List;
 
 @Data
 public class CatalogRequestDTO {
@@ -11,7 +10,4 @@ public class CatalogRequestDTO {
 
     private String description;
     private String image;
-
-
-    private List<String> category;
 }
