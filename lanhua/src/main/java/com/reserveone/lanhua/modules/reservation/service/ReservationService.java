@@ -4,6 +4,9 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.reserveone.lanhua.modules.catalog.dto.CatalogSummaryDTO;
+import com.reserveone.lanhua.modules.class_schedule.dto.ScheduleSummaryDTO;
+import com.reserveone.lanhua.modules.user.dto.UserSummaryDTO;
 import org.springframework.stereotype.Service;
 
 import com.reserveone.lanhua.modules.reservation.dto.ReservationRequestDto;
@@ -101,19 +104,37 @@ public class ReservationService {
 
 
     private ReservationResponseDto mapToResponse(Reservation reservation) {
-        ReservationResponseDto response = new ReservationResponseDto();
-        response.setIdReservation(reservation.getIdReservation());
-        response.setIdUsers(reservation.getUsers().stream().map(User::getIdUser).collect(Collectors.toList()));
-        response.setUserNames(reservation.getUsers().stream()
-                .map(u -> u.getNameUser() + " " + u.getLastNameUser())
-                .collect(Collectors.toList()));
+        Long userId = reservation.getUsers().stream()
+                .findFirst()
+                .map(User::getIdUser)
+                .orElse(null);
 
-        response.setIdSchedule(reservation.getSchedule().getIdSchedule());
-        response.setModality(reservation.getSchedule().getModality());
-        response.setReservationDate(reservation.getReservationDate());
-        response.setReservationState(reservation.getReservationState());
-        response.setCreatedAt(reservation.getCreatedAt());
-        return response;
+        Schedule scheduleEntity = reservation.getSchedule();
+
+        ScheduleSummaryDTO schedule = new ScheduleSummaryDTO(
+                scheduleEntity.getIdSchedule(),
+                scheduleEntity.getQuotas(),
+                scheduleEntity.getScheduleDate(),
+                scheduleEntity.getLocation(),
+                scheduleEntity.getImage()
+        );
+
+        CatalogSummaryDTO catalog = new CatalogSummaryDTO(
+                scheduleEntity.getCatalog().getIdCatalog(),
+                scheduleEntity.getCatalog().getName(),
+                scheduleEntity.getCatalog().getImage()
+        );
+
+        return new ReservationResponseDto(
+                reservation.getIdReservation(),
+                userId,
+                schedule,
+                catalog,
+                scheduleEntity.getModality(),
+                reservation.getReservationState(),
+                reservation.getReservationDate(),
+                reservation.getCreatedAt()
+        );
     }
 
     public void confirmUserReservations(Long idUser) {

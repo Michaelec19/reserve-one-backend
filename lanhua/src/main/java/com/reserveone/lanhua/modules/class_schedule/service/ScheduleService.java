@@ -3,12 +3,14 @@ package com.reserveone.lanhua.modules.class_schedule.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.reserveone.lanhua.modules.catalog.dto.CatalogSummaryDTO;
+import com.reserveone.lanhua.modules.class_schedule.dto.ScheduleResponseDto;
+import com.reserveone.lanhua.modules.user.dto.UserSummaryDTO;
 import org.springframework.stereotype.Service;
 
 import com.reserveone.lanhua.modules.catalog.entity.Catalog;
 import com.reserveone.lanhua.modules.catalog.repository.CatalogRepository;
 import com.reserveone.lanhua.modules.schedule.dto.ScheduleRequestDto;
-import com.reserveone.lanhua.modules.schedule.dto.ScheduleResponseDto;
 import com.reserveone.lanhua.modules.schedule.entity.Schedule;
 import com.reserveone.lanhua.modules.schedule.repository.ScheduleRepository;
 import com.reserveone.lanhua.modules.user.entity.User;
@@ -16,7 +18,6 @@ import com.reserveone.lanhua.modules.user.repository.UserRepository;
 
 @Service
 public class ScheduleService {
-
     private final ScheduleRepository scheduleRepository;
     private final UserRepository userRepository;
     private final CatalogRepository catalogRepository;
@@ -95,27 +96,40 @@ public class ScheduleService {
     }
 
     private ScheduleResponseDto mapToResponse(Schedule schedule) {
-        ScheduleResponseDto response = new ScheduleResponseDto();
-        response.setIdSchedule(schedule.getIdSchedule());
+        CatalogSummaryDTO catalog = null;
 
         if (schedule.getCatalog() != null) {
-            com.reserveone.lanhua.modules.catalog.dto.CatalogSummaryDTO catalogSummary =
-                    new com.reserveone.lanhua.modules.catalog.dto.CatalogSummaryDTO();
-            catalogSummary.setIdCatalog(schedule.getCatalog().getIdCatalog());
-            catalogSummary.setName(schedule.getCatalog().getName());
-            catalogSummary.setImage(schedule.getCatalog().getImage());
-
-            response.setCatalog(catalogSummary);
+            catalog = new CatalogSummaryDTO(
+                    schedule.getCatalog().getIdCatalog(),
+                    schedule.getCatalog().getName(),
+                    schedule.getCatalog().getImage()
+            );
         }
 
-        response.setModality(schedule.getModality());
-        response.setLevel(schedule.getLevel());
-        response.setQuotas(schedule.getQuotas());
-        response.setScheduleDate(schedule.getScheduleDate());
-        response.setLocation(schedule.getLocation());
-        response.setIdUser(schedule.getUser().getIdUser());
-        response.setUserName(schedule.getUser().getNameUser() + " " + schedule.getUser().getLastNameUser());
-        response.setCreatedAt(schedule.getCreatedAt());
-        return response;
+        UserSummaryDTO user = null;
+        String userName = null;
+        Long idUser = null;
+        
+        if (schedule.getUser() != null) {
+            userName = schedule.getUser().getNameUser() + " " + schedule.getUser().getLastNameUser();
+            user = new UserSummaryDTO(
+                    schedule.getUser().getIdUser(),
+                    userName,
+                    schedule.getUser().getEmailUser()
+            );
+        }
+
+        return new ScheduleResponseDto(
+                schedule.getIdSchedule(),
+                catalog,
+                schedule.getModality(),
+                schedule.getLevel(),
+                schedule.getQuotas(),
+                schedule.getScheduleDate(),
+                schedule.getLocation(),
+                schedule.getImage(),
+                user,
+                schedule.getCreatedAt()
+        );
     }
 }
