@@ -23,7 +23,7 @@ public class CatalogService {
         this.catalogMembershipRepository = catalogMembershipRepository;
     }
 
-    // MÉTODOS CATALOG
+    // --- MÉTODOS CATALOG ---
 
     public List<CatalogResponseDTO> getAllCatalogs() {
         return catalogRepository.findAll().stream()
@@ -42,7 +42,6 @@ public class CatalogService {
                 .name(dto.getName())
                 .description(dto.getDescription())
                 .image(dto.getImage())
-                .category(dto.getCategory()) // <-- Agregado aquí
                 .build();
         return mapToCatalogResponseDTO(catalogRepository.save(catalog));
     }
@@ -54,7 +53,6 @@ public class CatalogService {
         catalog.setName(dto.getName());
         catalog.setDescription(dto.getDescription());
         catalog.setImage(dto.getImage());
-        catalog.setCategory(dto.getCategory()); // <-- Agregado aquí
 
         return mapToCatalogResponseDTO(catalogRepository.save(catalog));
     }
@@ -66,7 +64,7 @@ public class CatalogService {
         catalogRepository.deleteById(id);
     }
 
-    // MÉTODOS CATALOG MEMBERSHIP
+    // --- MÉTODOS CATALOG MEMBERSHIP ---
 
     public List<CatalogMembershipResponseDTO> getAllCatalogMemberships() {
         return catalogMembershipRepository.findAll().stream()
@@ -93,7 +91,7 @@ public class CatalogService {
         catalogMembershipRepository.deleteById(id);
     }
 
-    // MAPPERS
+    // --- MAPPERS ---
 
     private CatalogResponseDTO mapToCatalogResponseDTO(Catalog catalog) {
         CatalogResponseDTO dto = new CatalogResponseDTO();
@@ -101,7 +99,6 @@ public class CatalogService {
         dto.setName(catalog.getName());
         dto.setDescription(catalog.getDescription());
         dto.setImage(catalog.getImage());
-        dto.setCategory(catalog.getCategory()); // <-- Agregado aquí
         dto.setCreatedAt(catalog.getCreatedAt());
         dto.setUpdatedAt(catalog.getUpdatedAt());
         return dto;
