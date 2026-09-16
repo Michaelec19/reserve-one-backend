@@ -2,12 +2,12 @@ package com.reserveone.lanhua.modules.class_schedule.controller;
 
 import java.util.List;
 
+import com.reserveone.lanhua.modules.class_schedule.dto.ScheduleResponseDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.reserveone.lanhua.modules.schedule.dto.ScheduleRequestDto;
-import com.reserveone.lanhua.modules.schedule.dto.ScheduleResponseDto;
 import com.reserveone.lanhua.modules.class_schedule.service.ScheduleService;
 
 import jakarta.validation.Valid;
