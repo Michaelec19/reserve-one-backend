@@ -1,4 +1,4 @@
-package com.reserveone.lanhua.modules.schedule.service;
+package com.reserveone.lanhua.modules.class_schedule.service;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -97,13 +97,22 @@ public class ScheduleService {
     private ScheduleResponseDto mapToResponse(Schedule schedule) {
         ScheduleResponseDto response = new ScheduleResponseDto();
         response.setIdSchedule(schedule.getIdSchedule());
-        response.setIdCatalog(schedule.getCatalog().getIdCatalog());
+
+        if (schedule.getCatalog() != null) {
+            com.reserveone.lanhua.modules.catalog.dto.CatalogSummaryDTO catalogSummary =
+                    new com.reserveone.lanhua.modules.catalog.dto.CatalogSummaryDTO();
+            catalogSummary.setIdCatalog(schedule.getCatalog().getIdCatalog());
+            catalogSummary.setName(schedule.getCatalog().getName());
+            catalogSummary.setImage(schedule.getCatalog().getImage());
+
+            response.setCatalog(catalogSummary);
+        }
+
         response.setModality(schedule.getModality());
         response.setLevel(schedule.getLevel());
         response.setQuotas(schedule.getQuotas());
         response.setScheduleDate(schedule.getScheduleDate());
         response.setLocation(schedule.getLocation());
-        response.setImage(schedule.getImage());
         response.setIdUser(schedule.getUser().getIdUser());
         response.setUserName(schedule.getUser().getNameUser() + " " + schedule.getUser().getLastNameUser());
         response.setCreatedAt(schedule.getCreatedAt());
