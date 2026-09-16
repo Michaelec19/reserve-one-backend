@@ -32,6 +32,12 @@ public class Catalog {
     @Column(name = "image", columnDefinition = "TEXT")
     private String image;
 
+    // --- NUEVO: Lista de categorías ---
+    @ElementCollection
+    @CollectionTable(name = "catalog_categories", joinColumns = @JoinColumn(name = "id_catalog"))
+    @Column(name = "category")
+    private List<String> category;
+
     @OneToMany(mappedBy = "catalog", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CatalogMembership> catalogMemberships;
 
