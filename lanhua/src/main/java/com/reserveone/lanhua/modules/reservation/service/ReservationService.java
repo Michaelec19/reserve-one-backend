@@ -130,7 +130,7 @@ public class ReservationService {
                 userId,
                 schedule,
                 catalog,
-                scheduleEntity.getModality(), // o reservation.getModality(), confirma cuál aplica
+                scheduleEntity.getModality(),
                 reservation.getReservationState(),
                 reservation.getReservationDate(),
                 reservation.getCreatedAt()
